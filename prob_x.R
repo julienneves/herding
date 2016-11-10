@@ -122,7 +122,7 @@ prob_x <- function(v,x){
   
   for (t in 1:n) {
     if (data[t, "x"] == 1) {
-      data[t, "beta"] <- uniroot(beta_solv, c(0, 1))$root
+      data[t, "beta"] <- tryCatch(uniroot(beta_solv, c(0, 1))$root, error = function(e){0.5})
       data[t, "prob_x_h"] <- prob_buy_h(data[t, "beta"], mu, tau, eps)
       data[t, "prob_x_l"] <- prob_buy_l(data[t, "beta"], mu, tau, eps)
       data[t, "prob_x_n"] <- prob_buy_n(data[t, "beta"], mu, tau, eps)
@@ -131,7 +131,7 @@ prob_x <- function(v,x){
       data[t, "prob_x_l"] <- prob_no_l
       data[t, "prob_x_n"] <- prob_no_n
     } else if (data[t, "x"] == -1) {
-      data[t, "sigma"] <- uniroot(sigma_solv, c(0, 1))$root
+      data[t, "sigma"] <- tryCatch(uniroot(sigma_solv, c(0, 1))$root, error = function(e){0.5})
       data[t, "prob_x_h"] <- prob_sell_h(data[t, "sigma"], mu, tau, eps)
       data[t, "prob_x_l"] <- prob_sell_l(data[t, "sigma"], mu, tau, eps)
       data[t, "prob_x_n"] <- prob_sell_n(data[t, "sigma"], mu, tau, eps)
@@ -156,6 +156,8 @@ prob_x <- function(v,x){
             cumprod(data$prob_x_l)[t] * data[t, "prob_v_l"] +
             cumprod(data$prob_x_n)[t] * data[t, "prob_v_n"])
     }
+    cat("Iteration", t , "\r")
+    flush.console()
   }
   return(data)
 }
