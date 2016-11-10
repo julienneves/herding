@@ -2,7 +2,7 @@ library(highfrequency)
 
 from = "2013-01-01"; 
 to = "2013-02-01"; 
-datasource = "C:/Users/Server/Desktop/Projects/Herding/xts_data";
+datasource = "~/Projects/Herding/xts_data";
 
 tdata = TAQLoad("ASH",from,to,trades=TRUE,quotes=FALSE,
                 datasource=datasource,variables=NULL)
@@ -15,4 +15,5 @@ tqdata = matchTradesQuotes(tdata,qdata);
 #Get the inferred trade direction according to the Lee-Ready rule
 x = getTradeDirection(tqdata)
 
-time_diff = diff(time(tqdata$PRICE))
+trade = xts(x = cbind(x,rep(NA,length(x))) , order.by = time(tqdata), unique = FALSE)
+colnames(trade) <- c("x","prob_x")

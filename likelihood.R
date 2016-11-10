@@ -1,16 +1,34 @@
 library(GA)
+library(highfrequency)
 
-#x <-  sample(c(-1,1), 10 ,replace = TRUE)
-x <- rep(1,100)
+from = "2013-01-01"; 
+to = "2013-01-07"; 
+datasource = "~/Projects/Herding/xts_data";
+
+tdata = TAQLoad("ASH",from,to,trades=TRUE,quotes=FALSE,
+                datasource=datasource,variables=NULL)
+qdata = TAQLoad("ASH",from,to,trades=FALSE,quotes=TRUE,
+                datasource=datasource,variables=NULL)
+
+#Match the trade and quote data
+tqdata = matchTradesQuotes(tdata,qdata);
+
+#Get the inferred trade direction according to the Lee-Ready rule
+x = getTradeDirection(tqdata)
+
+trade = xts(x = cbind(x,rep(NA,length(x))) , order.by = time(tqdata), unique = FALSE)
+colnames(trade) <- c("x","prob_x")
+
+
 v <- c(.28,.62,.42,.45,.57)
-lower <- v - rep(0.01,5)
-upper <- v + rep(0.01,5)
+lower <- v - rep(0.1,5)
+upper <- v + rep(0.1,5)
+
 
 likelihood <- function(v){
-    data <- prob_x(v,x)
-    return(prod(data$prob_x))
+    trade <- prob_trade(trade, v)
+    return(cumprod(trade$prob_x))
 }
-
 
 GA <- ga(type = "real-valued", fitness = likelihood, min = lower, max = upper)
 
