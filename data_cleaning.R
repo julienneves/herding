@@ -1,7 +1,7 @@
 library(highfrequency)
 
-from = "2013-01-01"; 
-to = "2013-02-01"; 
+from = "1998-01-01"; 
+to = "1998-01-31"; 
 datasource = "~/Projects/Herding/raw_data";
 datadestination = "~/Projects/Herding/xts_data";
 convert( from=from, to=to, datasource=datasource, 
