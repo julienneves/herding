@@ -121,22 +121,23 @@ prob_x <- function(trade, v){
   sigma_solv <- function(sigma) {
     (1 - delta) * (prob_v_sigma_h(sigma) - prob_v_sell_h(sigma)) - delta * (prob_v_sigma_l(sigma) - prob_v_sell_l(sigma))
   }
- 
-    #if (trade[t, "x"] == 1) {
-      beta <- tryCatch(uniroot(beta_solv, c(0, 1))$root, error = function(e){beta})
+  
+  beta <- tryCatch(uniroot(beta_solv, c(0, 1))$root, error = function(e){beta})
+  sigma <- tryCatch(uniroot(sigma_solv, c(0, 1))$root, error = function(e){sigma})
+  
+    if (trade[t, "x"] == 1) {
       prob_x_h <- prob_buy_h(beta, mu, tau, eps)
       prob_x_l <- prob_buy_l(beta, mu, tau, eps)
       prob_x_n <- prob_buy_n(beta, mu, tau, eps)
-    #} else if (trade[t, "x"] == 0) {
+    } else if (trade[t, "x"] == 0) {
       prob_x_h <- prob_no_h
       prob_x_l <- prob_no_l
       prob_x_n <- prob_no_n
-    #} else if (trade[t, "x"] == -1) {
-      sigma <- tryCatch(uniroot(sigma_solv, c(0, 1))$root, error = function(e){sigma})
+    } else if (trade[t, "x"] == -1) {
       prob_x_h <- prob_sell_h(sigma, mu, tau, eps)
       prob_x_l <- prob_sell_l(sigma, mu, tau, eps)
       prob_x_n <- prob_sell_n(sigma, mu, tau, eps)
-    #}
+    }
     
     trade[t, "prob_x"] <- prob_x_h * prob_v_h + prob_x_l * prob_v_l + prob_x_n * prob_v_n
     trade[t,c("beta","sigma")] <- c(beta,sigma) 
