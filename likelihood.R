@@ -1,8 +1,10 @@
 library(GA)
 library(highfrequency)
 
-source('~/Projects/Herding/code/lee_ready.R')
-source('~/Projects/Herding/code/prob_x.R')
+setwd("~/Projects/Herding")
+
+source('lee_ready.R')
+source('prob_x.R')
 
 from = "1998-01-01"; 
 to = "1998-01-31"; 

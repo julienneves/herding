@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
+/xts_data/*
+/raw_data/*
