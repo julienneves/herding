@@ -2,8 +2,8 @@ library(highfrequency)
 
 from = "1998-01-01"; 
 to = "1998-01-31"; 
-datasource = "~/raw_data";
-datadestination = "~/xts_data";
+datasource = "~/Projects/Herding/raw_data";
+datadestination = "~/Projects/Herding/xts_data";
 convert( from=from, to=to, datasource=datasource, 
          datadestination=datadestination, trades = F,  quotes = T, 
          ticker="ASH", dir = TRUE, extension = "csv", 

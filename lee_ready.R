@@ -1,10 +1,10 @@
 lee_ready <- function(tqdata, delay = 200){
     
     x = getTradeDirection(tqdata)
-    trade = xts(x = x, order.by = time(tqdata), unique = FALSE)
+    trade = xts(x = x, order.by = time(tqdata), unique = FALSE, tzone = attr(tqdata,'tzone'))
     
     trade_split <- split.xts(trade, f= "days")
-    trade_split <- lapply(trade_split, no_trade, delay)
+    trade_split <- lapply(trade_split, insert_no_trade, delay)
     trade <- do.call(rbind,trade_split)
     
     trade <- merge(trade,xts(x = matrix(rep(NA,6*length(trade)),ncol = 6), order.by = time(trade)))
@@ -13,13 +13,13 @@ lee_ready <- function(tqdata, delay = 200){
     return(trade)
 }
 
-no_trade <- function(trade, delay){
+insert_no_trade <- function(trade, delay){
     
     time_trade <- time(trade)
     
-    time_no_trade <- add_no_trade(time_trade, delay)
+    time_no_trade <- test_inactivity(time_trade, delay)
     
-    no_trade <- xts(x = rep(0,length(time_no_trade)), order.by = time_no_trade, unique = FALSE)
+    no_trade <- xts(x = rep(0,length(time_no_trade)), order.by = time_no_trade, unique = FALSE, tzone = attr(tqdata,'tzone'))
     
     no_trade[time_trade,] <- trade
     trade <- no_trade
@@ -27,7 +27,7 @@ no_trade <- function(trade, delay){
     return(trade)
 }
 
-add_no_trade <- function(time_trade, delay){
+test_inactivity <- function(time_trade, delay){
     
     diff_time <- diff(time_trade)
     
