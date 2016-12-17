@@ -1,4 +1,4 @@
-lee_ready <- function(tqdata, delay = 200){
+lee_ready <- function(tqdata, delay = default_delay(tqdata)){
     
     x = getTradeDirection(tqdata)
     trade = xts(x = x, order.by = time(tqdata), unique = FALSE, tzone = attr(tqdata,'tzone'))
@@ -7,13 +7,13 @@ lee_ready <- function(tqdata, delay = 200){
     trade_split <- lapply(trade_split, insert_no_trade, delay)
     trade <- do.call(rbind,trade_split)
     
-    trade <- merge(trade,xts(x = matrix(rep(NA,6*length(trade)),ncol = 6), order.by = time(trade)))
-    colnames(trade) <- c("x", "prob_x","prob_x_h","prob_x_l","prob_x_n", "beta", "sigma")
+    trade <- merge(trade,xts(x = matrix(rep(NA,3*length(trade)),ncol = 3), order.by = time(trade)))
+    colnames(trade) <- c("x", "prob_x", "beta", "sigma")
     
     return(trade)
 }
 
-insert_no_trade <- function(trade, delay){
+insert_no_trade <- function(trade, delay = NULL){
     
     time_trade <- time(trade)
     
@@ -23,7 +23,6 @@ insert_no_trade <- function(trade, delay){
     
     no_trade[time_trade,] <- trade
     trade <- no_trade
-    
     return(trade)
 }
 
@@ -38,3 +37,18 @@ test_inactivity <- function(time_trade, delay){
     }
     return(time_trade)
 }
+
+delay =     trade_split <- split.xts(trade, f= "days")
+
+default_delay <- function(tqdata) {
+    
+    x = getTradeDirection(tqdata)
+    trade = xts(x = x, order.by = time(tqdata), unique = FALSE, tzone = attr(tqdata,'tzone'))
+    
+    trade_split <- split.xts(trade, f= "days")
+    
+    time_mean <- function(trade) mean(diff(time(trade)))
+    
+    return(mean(sapply(trade_split, time_mean)))
+}
+
