@@ -155,10 +155,9 @@ prob_x <- function(trade, v){
             (hist_x_h * prob_h +
              hist_x_l * prob_l +
              hist_x_n * prob_n)
-        
-    # Print iteration number
-    cat("Iteration", t , "\r")
-    flush.console()
+        # Print day
+        cat("Iteration", t , "\r")
+        flush.console()
     }
   return(trade)
 }

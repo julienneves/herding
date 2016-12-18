@@ -27,8 +27,8 @@ trade <- lee_ready(tqdata)
 # Set sarting point and bounds for nuisance parameter
 # v = (alpha, delta, mu, tau, eps)
 v <- c(.28,.62,.42,.45,.57)
-lower <- rep(0.1,5)
-upper <- rep(0.9,5)
+lower <- c(.2, .5, .2, .4, .35)
+upper <- c(.3, .7, .4, .7, .7)
 
 # Set loglikelihood function
 likelihood <- function(v){
@@ -38,6 +38,22 @@ likelihood <- function(v){
 
 # Use particle swarm to find optimia
 out_ga <- ga(type = "real-valued", fitness = likelihood, min = lower, max = upper, monitor = plot, run = 15, maxiter = 30)
+summary(out_ga)
 
 # Use particle swarm to find optimia
-out_pso <- psoptim(v, likelihood, lower = lower, upper = upper, control = list(fnscale = -1,maxit = 20))
+out_pso <- psoptim(v, likelihood, lower = lower, upper = upper, control = list(fnscale = -1,maxit = 30))
+
+
+result <- function(trade,v){
+    trade <- prob_trade(trade, v)
+    
+    herd_beta <- dim(trade[trade$beta<0.5])[1] / dim(trade)[1]
+    herd_sigma <- dim(trade[trade$sigma>0.5])[1] / dim(trade)[1]
+    
+    out <- c(herd_beta,herd_sigma)
+    names(out) <- c("herd buying", "herd selling")
+    return(out)    
+}
+
+res <- result(trade, out_ga@solution)
+res
