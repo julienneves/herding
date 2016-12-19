@@ -7,8 +7,8 @@ lee_ready <- function(tqdata, delay = default_delay(tqdata)){
     trade_split <- lapply(trade_split, insert_no_trade, delay)
     trade <- do.call(rbind,trade_split)
     
-    trade <- merge(trade,xts(x = matrix(rep(NA,3*length(trade)),ncol = 3), order.by = time(trade)))
-    colnames(trade) <- c("x", "prob_x", "beta", "sigma")
+    trade <- merge(trade,xts(x = matrix(rep(NA,9*length(trade)),ncol = 9), order.by = time(trade)))
+    colnames(trade) <- c("x", "prob_x", "beta", "sigma", "prob_x_h", "prob_x_l", "prob_x_n", "prob_v_h", "prob_v_l", "prob_v_n")
     
     return(trade)
 }

@@ -135,6 +135,8 @@ prob_x <- function(trade, v){
         # Fill in the dataframe with the different probabilities for a given trade
         trade[t, "prob_x"] <- prob_x_h * prob_v_h + prob_x_l * prob_v_l + prob_x_n * prob_v_n
         trade[t,c("beta","sigma")] <- c(beta, sigma)
+        trade[t,c("prob_x_h", "prob_x_l", "prob_x_n")] <- c(prob_x_h, prob_x_l, prob_x_n)
+        trade[t,c("prob_v_h", "prob_v_l", "prob_v_n")] <- c(prob_v_h, prob_v_l, prob_v_n)
         
         # Update probability of trade sequence given the state of market
         scale <-  mean(hist_x_h, hist_x_l, hist_x_n)
