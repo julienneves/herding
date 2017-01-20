@@ -27,8 +27,8 @@ trade <- lee_ready(tqdata)
 # Set sarting point and bounds for nuisance parameter
 # v = (alpha, delta, mu, tau, eps)
 v <- c(.28,.62,.42,.45,.57)
-lower <- c(.2, .5, .2, .4, .35)
-upper <- c(.3, .7, .4, .7, .7)
+lower <- rep(0.1,5)
+upper <- rep(0.9,5)
 
 # Set loglikelihood function
 likelihood <- function(v){
